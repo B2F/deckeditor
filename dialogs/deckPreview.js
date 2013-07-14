@@ -1,29 +1,18 @@
-CKEDITOR.dialog.add('deckPreview', function(editor) {
-  return {
-    title: 'Deck Preview',
-    minHeight: window.innerHeight,
-    minWidth: window.innerWidth,
-    contents:
-    [
-      {
-        id: 'deckeditor-source',
-        label: 'Deck Source',
-        elements:
-        [{
-          type: 'iframeElement',
-          setup: function(element) {
-            this.getElement().setHtml(element);
-          }
-        }]
-      }
-    ],
-    onShow: function() {
-      if (deckContainerElement = editor.document.getById('deck-container')) {
-        this.setupContent('<textarea>' + deckContainerElement.getOuterHtml() + '</textarea>');
-      }
-      else {
-        this.setupContent('No deck container found');
-      }
-    }
+var src = CKEDITOR.plugins.getPath('deckeditor') + 'dialogs/deckPreview.html';
+CKEDITOR.dialog.addIframe('deckPreview', 'deckPreview', src, 1000, 1000, initDeckPreview);
+
+function initDeckPreview() {
+  var outerWidth = $(window).innerWidth();
+  var outerHeigth = $(window).innerHeight();
+  $('iframe.cke_dialog_ui_iframe').css({'width':outerWidth,'height':outerHeigth});
+  var previewContent = 'No deck container found';
+  var deckContainer = $('iframe.cke_dialog_ui_iframe')
+                      .closest('html')
+                      .find('.cke_wysiwyg_frame')
+                      .contents()
+                      .find('#deck-container');
+  if (deckContainer.length != 0) {
+    previewContent = deckContainer.html();
   }
+  $('iframe.cke_dialog_ui_iframe').contents().find('body').append(previewContent);
 }

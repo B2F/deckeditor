@@ -2,55 +2,28 @@ CKEDITOR.plugins.add('deckeditor', {
   icons: 'deckeditor',
   init: function(editor) {
 
-    // load JS file
-    head        = document.getElementsByTagName('HEAD').item(0);
-    script      = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = CKEDITOR.plugins.getPath('deckeditor') + "modernizr.custom.js";
-    head.appendChild(script);
-
+    // load jQuery
     head        = document.getElementsByTagName('HEAD').item(0);
     script      = document.createElement("script");
     script.type = "text/javascript";
     script.src  = CKEDITOR.plugins.getPath('deckeditor') + "jquery-1.7.2.min.js";
     head.appendChild(script);
 
-    var head    = document.getElementsByTagName('HEAD').item(0);
-    var script  = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = CKEDITOR.plugins.getPath('deckeditor') + "core/deck.core.js";
-    head.appendChild(script);
-
-    // load CSS file
-    var link   = document.createElement('link');
-    link.rel   = 'stylesheet';
-    link.type  = 'text/css';
-    link.href  = CKEDITOR.plugins.getPath('deckeditor') + "themes/style/web-2.0.css";
-    link.media = 'all';
-    head.appendChild(link);
-
-    link   = document.createElement('link');
-    link.rel   = 'stylesheet';
-    link.type  = 'text/css';
-    link.href  = CKEDITOR.plugins.getPath('deckeditor') + "themes/transition/horizontal-slide.css";
-    link.media = 'all';
-    head.appendChild(link);
-
     // Commands
     editor.addCommand('deckeditorAddContainer', {
       exec: function(editor) {
         // We want only one deck-container in the page to avoid conflicts:
-        editor.setData('<div class="deck-container" id="deck-container">Deck Editor</div>', function() {
+        editor.setData('<div id="deck-container">Deck Editor</div>', function() {
           this.checkDirty();
         });
       }
     });
     editor.addCommand('deckeditorAddSection', {
       exec: function(editor) {
-        var sectionElement = CKEDITOR.dom.element.createFromHtml('<section class="slide">{ Write your section here }</section>');
+        var sectionElement = CKEDITOR.dom.element.createFromHtml('<section class="slide"><h1>Section</h1></section>');
         var selectedElement = editor.getSelection().getStartElement();
         // If we're inside the deck-container, insert the section in here:
-        if (selectedElement.hasClass('deck-container')) {
+        if (selectedElement.getId() == 'deck-container') {
           editor.insertElement(sectionElement);
         }
         else {
